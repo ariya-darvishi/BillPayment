@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">BillPayment</string>
     <string name="test_message">test message</string>
+    <string name="rial">ریال</string>
+    <string name="bill_payment_title">پرداخت قبض</string>
+    <string name="back_title">بازگشت</string>
+    <string name="bill_title">قبض</string>
+    <string name="bill_id_title">شناسه قبض</string>
+    <string name="bill_id_hint">کد چند رقمی شناسه</string>
+    <string name="payment_id">شناسه پرداخت</string>
+    <string name="bill_report">استعلام قبض</string>
+    <string name="mobile_bill">قبض تلفن همراه</string>
+    <string name="bill_id_test">۷۸۹۷۳۷۹۰۳۰۱۵۲</string>
+    <string name="bill_payment_test">۱۵۹۵۲۲۳۷۷</string>
+    <string name="amount_owed_title">مبلغ بدهی</string>
+    <string name="test_amount_owed">۱،۵۹۵،۰۰۰ ریال</string>
 </resources>
