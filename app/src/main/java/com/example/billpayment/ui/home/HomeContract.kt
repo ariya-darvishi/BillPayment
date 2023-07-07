@@ -10,6 +10,8 @@ class HomeContract {
     sealed class Event : ViewEvent {
         object BackButtonClicked : Event()
         object InsertInput : Event()
+        object OnDeleteBillIDInputClick : Event()
+        object OnDeletePaymentIDInputClick : Event()
         object OnBillPaymentButtonClick : Event()
         data class OnBillInquiryButtonClick(val billId: String, val billPayment: String) : Event()
     }
@@ -24,6 +26,9 @@ class HomeContract {
         ) : ViewState
 
     sealed class Effect : ViewSideEffect {
+
+        object DeleteBillID : Effect()
+        object DeletePaymentID : Effect()
 
         sealed class BottomSheetVisibility : Effect() {
             object ShowBottomSheet : BottomSheetVisibility()
