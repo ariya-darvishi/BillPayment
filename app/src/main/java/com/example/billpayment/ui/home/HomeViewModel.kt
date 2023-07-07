@@ -36,6 +36,14 @@ class HomeViewModel @Inject constructor() :
                 setState { copy(isError = false, errorState = ValidateInput.NONE) }
             }
 
+            is HomeContract.Event.OnDeleteBillIDInputClick -> {
+                setEffect { HomeContract.Effect.DeleteBillID }
+            }
+
+            is HomeContract.Event.OnDeletePaymentIDInputClick -> {
+                setEffect { HomeContract.Effect.DeletePaymentID }
+            }
+
             else -> {}
         }
     }
