@@ -53,12 +53,24 @@ import com.example.billpayment.utils.Dimens._18
 import com.example.billpayment.utils.Dimens._2
 import com.example.billpayment.utils.Dimens._22
 import com.example.billpayment.utils.Dimens._25
+import com.example.billpayment.utils.Dimens._45
+import com.example.billpayment.utils.formatWithComma
+import com.example.billpayment.utils.getAmount
+import com.example.billpayment.utils.getBillInfo
+import com.example.billpayment.utils.getServiceCode
 
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun BillBottomSheetContent(onPaymentClick: () -> Unit) {
+fun BillBottomSheetContent(
+    billID: String? = null, paymentID: String? = null, onPaymentClick: () -> Unit
+) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+
+        val serviceCode = billID?.getServiceCode()?.getBillInfo()
+        val serviceName = serviceCode?.first
+        val serviceLogo = serviceCode?.second
+
 
         Box(
             Modifier
@@ -112,11 +124,16 @@ fun BillBottomSheetContent(onPaymentClick: () -> Unit) {
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.aligned(CenterVertically)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.img_user),
-                                    contentDescription = "description",
-                                )
-                                CustomFieldBodyTextField(stringResource(R.string.mobile_bill))
+
+                                serviceLogo?.let { painterResource(id = it) }?.let {
+                                    Image(
+                                        painter = it,
+                                        contentDescription = "service logo",
+                                        modifier = Modifier.size(_45)
+                                    )
+                                }
+
+                                serviceName?.let { CustomFieldBodyTextField(it) }
 
                             }
                         }
@@ -144,24 +161,17 @@ fun BillBottomSheetContent(onPaymentClick: () -> Unit) {
                                 Row() {
 
                                     CustomFieldBodyTextField(stringResource(R.string.bill_id_title))
-
                                     Spacer(Modifier.weight(1f))
-
-
-                                    CustomFieldBodyTextField(stringResource(R.string.bill_id_test))
+                                    billID?.let { CustomFieldBodyTextField(it) }
                                 }
 
                                 Spacer(Modifier.weight(1f))
 
                                 Row() {
 
-                                    CustomFieldBodyTextField(stringResource(R.string.bill_payment_title))
-
+                                    CustomFieldBodyTextField(stringResource(R.string.payment_id))
                                     Spacer(Modifier.weight(1f))
-
-
-                                    CustomFieldBodyTextField(stringResource(R.string.bill_payment_test))
-
+                                    paymentID?.let { CustomFieldBodyTextField(it) }
                                 }
 
                             }
@@ -203,7 +213,8 @@ fun BillBottomSheetContent(onPaymentClick: () -> Unit) {
                             Spacer(Modifier.weight(1f))
 
                             Text(
-                                text = stringResource(R.string.test_amount_owed),
+                                text = paymentID?.getAmount()
+                                    ?.formatWithComma() + " " + stringResource(R.string.rial),
                                 color = onSurface,
                                 fontSize = font_20,
                                 fontWeight = FontWeight.Medium,
