@@ -44,7 +44,7 @@ import com.example.billpayment.utils.Dimens._12
 fun CustomTextField(
     hint: String,
     shape: Shape = RoundedCornerShape(_12),
-//    textInputChange: (String) -> Unit,
+    textInputChange: (String) -> Unit,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number, capitalization = KeyboardCapitalization.None
@@ -64,7 +64,10 @@ fun CustomTextField(
 
         TextField(value = textInput,
             onValueChange = {
-                if (it.length <= maxLength) textInput = it
+                if (it.length <= maxLength) {
+                    textInput = it
+                    textInputChange.invoke(it)
+                }
             },
             placeholder = {
                 CostumeFieldHintTextField(hint)

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
@@ -19,7 +18,11 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +48,7 @@ import com.example.billpayment.utils.Dimens._24
 import com.example.billpayment.utils.Dimens._28
 import com.example.billpayment.utils.Dimens._55
 import com.example.billpayment.utils.Dimens._8
+import com.example.billpayment.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
@@ -63,148 +67,150 @@ fun HomeScreen(
 
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutine = rememberCoroutineScope()
-    Column() {
 
-        LaunchedEffect(SIDE_EFFECTS_KEY) {
-            effectFlow?.onEach { effect ->
-                when (effect) {
-                    is HomeContract.Effect.Navigation.Back -> {
-                        onNavigationRequested(HomeContract.Effect.Navigation.Back)
+    var inputBillId by rememberSaveable { mutableStateOf("") }
+    var inputPaymentId by rememberSaveable { mutableStateOf("") }
+
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+
+        Column() {
+
+            LaunchedEffect(SIDE_EFFECTS_KEY) {
+                effectFlow?.onEach { effect ->
+                    when (effect) {
+                        is HomeContract.Effect.Navigation.Back -> {
+                            onNavigationRequested(HomeContract.Effect.Navigation.Back)
+                        }
+
+                        is HomeContract.Effect.BottomSheetVisibility.ShowBottomSheet -> {
+                            bottomSheetVisibility(
+                                coroutine, sheetState
+                            )
+                        }
+
+                        is HomeContract.Effect.BottomSheetVisibility.HideBottomSheet -> {
+                            bottomSheetVisibility(
+                                coroutine, sheetState
+                            )
+                        }
+
+                        else -> {}
                     }
-
-                    is HomeContract.Effect.BottomSheetVisibility.ShowBottomSheet -> {
-                        bottomSheetVisibility(
-                            coroutine, sheetState
-                        )
-                    }
-
-                    is HomeContract.Effect.BottomSheetVisibility.HideBottomSheet -> {
-                        bottomSheetVisibility(
-                            coroutine, sheetState
-                        )
-                    }
-
-                    else -> {}
-                }
-            }?.collect() {}
-        }
-        ModalBottomSheetLayout(sheetState = sheetState,
-            sheetShape = RoundedCornerShape(topStart = _28, topEnd = _28),
-            sheetContent = {
-                BillBottomSheetContent(onPaymentClick = { onEventSent(HomeContract.Event.OnBillPaymentButtonClick) })
+                }?.collect() {}
             }
+            ModalBottomSheetLayout(sheetState = sheetState,
+                sheetShape = RoundedCornerShape(topStart = _28, topEnd = _28),
+                sheetContent = {
+                    BillBottomSheetContent(billID = state.billID,
+                        paymentID = state.paymentID,
+                        onPaymentClick = { onEventSent(HomeContract.Event.OnBillPaymentButtonClick) })
+                }
 
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(surface1)
-                    .fillMaxSize()
-                    .padding(_24)
             ) {
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                Column(
+                    modifier = Modifier
+                        .background(surface1)
+                        .fillMaxSize()
+                        .padding(_24)
+                ) {
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
 
-                    CustomToolbar(
-                        toolbarTitle = stringResource(R.string.bill_payment_title),
-                        backBtnText = stringResource(R.string.back_title)
-                    ) {
-                        onEventSent(
-                            HomeContract.Event.BackButtonClicked
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(top = _24),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        CustomToolbar(
+                            toolbarTitle = stringResource(R.string.bill_payment_title),
+                            backBtnText = stringResource(R.string.back_title)
                         ) {
-
-                            GlideImage(
-                                modifier = Modifier
-                                    .padding(start = _20, end = _20)
-                                    .size(_55)
-                                    .clip(RoundedCornerShape(Dimens._15))
-                                    .background(white)
-                                    .padding(_10),
-                                model = R.drawable.ic_barcode,
-                                contentDescription = "",
-                            )
-
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(_8)
-                            )
-
-                            CustomPageTitleTextField(stringResource(R.string.bill_title))
-
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(_12)
-                            )
-
-                            CustomInputTextLayout(
-                                title = stringResource(R.string.bill_id_title),
-                                hint = stringResource(
-                                    R.string.bill_id_hint
-                                )
-                            )
-
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(_8)
-                            )
-
-                            CustomInputTextLayout(
-                                title = stringResource(R.string.payment_id), hint = stringResource(
-                                    R.string.bill_id_hint
-                                )
+                            onEventSent(
+                                HomeContract.Event.BackButtonClicked
                             )
                         }
 
-                        Box(modifier = Modifier.align(alignment = Alignment.BottomCenter)) {
+                        Box(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = _24),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
 
-                            CustomFilledButtons(
-                                btnText = stringResource(R.string.bill_report),
-                                onClick = {
-                                    onEventSent(
-                                        HomeContract.Event.OnBillInquiryButtonClick(
-                                            "sdfs", "drgdge"
-                                        )
-                                    )
-                                },
-                                backgroundBtnColor = orange2,
-                                textColor = white,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-
-                        when {
-                            state.isLoading -> {
-                                LazyColumn(
+                                GlideImage(
                                     modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(
-                                            horizontal = Dimens._16, vertical = Dimens._32
-                                        ), horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-//                            Loading()
-                                }
+                                        .padding(start = _20, end = _20)
+                                        .size(_55)
+                                        .clip(RoundedCornerShape(Dimens._15))
+                                        .background(white)
+                                        .padding(_10),
+                                    model = R.drawable.ic_barcode,
+                                    contentDescription = "",
+                                )
+
+                                Spacer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(_8)
+                                )
+
+                                CustomPageTitleTextField(stringResource(R.string.bill_title))
+
+                                Spacer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(_12)
+                                )
+
+                                CustomInputTextLayout(title = stringResource(R.string.bill_id_title),
+                                    hint = stringResource(
+                                        R.string.bill_id_hint
+                                    ),
+                                    textInputChange = {
+                                        inputBillId = it
+                                        onEventSent(HomeContract.Event.InsertInput)
+                                    })
+
+                                Spacer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(_8)
+                                )
+
+                                CustomInputTextLayout(title = stringResource(R.string.payment_id),
+                                    hint = stringResource(
+                                        R.string.bill_id_hint
+                                    ),
+                                    textInputChange = {
+                                        inputPaymentId = it
+                                        onEventSent(HomeContract.Event.InsertInput)
+                                    })
                             }
 
-                            state.isError -> state.throwable?.let {/* ErrorHandler(it)*/ }
+                            Box(modifier = Modifier.align(alignment = Alignment.BottomCenter)) {
 
-                            else -> {
+                                CustomFilledButtons(
+                                    btnText = stringResource(R.string.bill_report),
+                                    onClick = {
+                                        onEventSent(
+                                            HomeContract.Event.OnBillInquiryButtonClick(
+                                                inputBillId, inputPaymentId
+                                            )
+                                        )
+                                    },
+                                    backgroundBtnColor = orange2,
+                                    textColor = white,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                             }
+
                         }
                     }
                 }
             }
+        }
+    }
+
+    when {
+        state.isError -> {
+            state.errorState.let { ErrorHandler(it) }
         }
     }
 }

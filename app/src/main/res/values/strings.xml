@@ -10,8 +10,9 @@
     <string name="payment_id">شناسه پرداخت</string>
     <string name="bill_report">استعلام قبض</string>
     <string name="mobile_bill">قبض تلفن همراه</string>
-    <string name="bill_id_test">۷۸۹۷۳۷۹۰۳۰۱۵۲</string>
-    <string name="bill_payment_test">۱۵۹۵۲۲۳۷۷</string>
     <string name="amount_owed_title">مبلغ بدهی</string>
-    <string name="test_amount_owed">۱،۵۹۵،۰۰۰ ریال</string>
+    <string name="invalid_payment_it_message">مقدار شناسه پرداخت صحیح نمی باشد.</string>
+    <string name="invalid_bill_id">مقدار شناسه قبض صحیح نمی باشد.</string>
+    <string name="invalid_payment_message">مقادیر وارد شده نامعتبر می باشد.</string>
+    <string name="empty_input">مقادیر خواسته شده نمی تواند خالی باشد</string>
 </resources>

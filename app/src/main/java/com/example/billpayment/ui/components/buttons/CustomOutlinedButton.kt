@@ -34,7 +34,7 @@ import com.example.billpayment.ui.theme.outlineVariant
 import com.example.billpayment.ui.theme.white
 import com.example.billpayment.utils.Dimens
 import com.example.billpayment.utils.Dimens._1
-import com.example.billpayment.utils.Dimens._12
+import com.example.billpayment.utils.Dimens._6
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +42,7 @@ fun CustomOutlinedButton(
     btnText: String,
     onClick: (() -> Unit)? = null,
     borderStroke: BorderStroke = BorderStroke(_1, outlineVariant),
-    shape: Shape = RoundedCornerShape(_12),
+    shape: Shape = RoundedCornerShape(_6),
     textColor: Color = onSurface,
     color: ButtonColors = ButtonDefaults.outlinedButtonColors(
         contentColor = outline, containerColor = white

@@ -58,22 +58,16 @@ object Dimens {
     val _32:Dp
         @Composable get() = dimensionResource(id = R.dimen._32)
 
+    val _45:Dp
+        @Composable get() = dimensionResource(id = R.dimen._32)
+
     val _50: Dp
         @Composable get() = dimensionResource(id = R.dimen._50)
 
     val _55: Dp
         @Composable get() = dimensionResource(id = R.dimen._55)
 
-    val _80: Dp
-        @Composable get() = dimensionResource(id = R.dimen._80)
-
     val _90: Dp
         @Composable get() = dimensionResource(id = R.dimen._90)
-
-    val _100: Dp
-        @Composable get() = dimensionResource(id = R.dimen._100)
-
-    val _150: Dp
-        @Composable get() = dimensionResource(id = R.dimen._150)
 
 }
