@@ -7,10 +7,10 @@ import com.example.billpayment.ui.components.textFields.CustomFieldTitleTextFiel
 import com.example.billpayment.ui.components.textFields.CustomTextField
 
 @Composable
-fun CustomInputTextLayout(title: String, hint: String, textInputChange: (String) -> Unit) {
+fun CustomInputTextLayout(title: String, hint: String, onDeleteInputClick: () -> Unit, textInputChange: (String) -> Unit) {
 
     Column {
         CustomFieldTitleTextField(title)
-        CustomTextField(hint = hint, textInputChange = textInputChange)
+        CustomTextField(hint = hint, textInputChange = textInputChange, onDeleteInputClick = onDeleteInputClick)
     }
 }

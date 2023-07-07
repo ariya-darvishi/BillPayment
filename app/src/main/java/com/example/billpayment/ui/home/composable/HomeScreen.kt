@@ -20,8 +20,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,8 +68,8 @@ fun HomeScreen(
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutine = rememberCoroutineScope()
 
-    var inputBillId by rememberSaveable { mutableStateOf("") }
-    var inputPaymentId by rememberSaveable { mutableStateOf("") }
+    var inputBillId by remember { mutableStateOf("") }
+    var inputPaymentId by remember { mutableStateOf("") }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
 
@@ -92,6 +92,14 @@ fun HomeScreen(
                             bottomSheetVisibility(
                                 coroutine, sheetState
                             )
+                        }
+
+                        is HomeContract.Effect.DeleteBillID -> {
+                            inputBillId = ""
+                        }
+
+                        is HomeContract.Effect.DeletePaymentID -> {
+                            inputPaymentId = ""
                         }
 
                         else -> {}
@@ -163,6 +171,8 @@ fun HomeScreen(
                                     hint = stringResource(
                                         R.string.bill_id_hint
                                     ),
+                                    onDeleteInputClick = {onEventSent(HomeContract.Event.OnDeleteBillIDInputClick)},
+//                                    onDeleteInputClick = {inputBillId = ""},
                                     textInputChange = {
                                         inputBillId = it
                                         onEventSent(HomeContract.Event.InsertInput)
@@ -178,6 +188,9 @@ fun HomeScreen(
                                     hint = stringResource(
                                         R.string.bill_id_hint
                                     ),
+//                                    onDeleteInputClick = {onEventSent(HomeContract.Event.OnDeleteInputClick)},
+                                    onDeleteInputClick = {onEventSent(HomeContract.Event.OnDeletePaymentIDInputClick)},
+//                                    onDeleteInputClick = {inputBillId = ""},
                                     textInputChange = {
                                         inputPaymentId = it
                                         onEventSent(HomeContract.Event.InsertInput)

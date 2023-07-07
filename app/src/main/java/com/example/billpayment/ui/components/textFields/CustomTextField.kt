@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -49,7 +50,8 @@ fun CustomTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Number, capitalization = KeyboardCapitalization.None
     ),
-    colors: androidx.compose.material3.TextFieldColors = InputTextFieldColors(),
+    colors: TextFieldColors = InputTextFieldColors(),
+    onDeleteInputClick: () -> Unit,
 ) {
     var textInput by rememberSaveable { mutableStateOf("") }
 
@@ -86,7 +88,11 @@ fun CustomTextField(
             shape = shape,
             trailingIcon = {
                 if (textInput.isNotEmpty()) {
-                    IconButton(onClick = { textInput = "" }) {
+                    IconButton(
+                        onClick = {
+                            textInput = ""
+                            onDeleteInputClick.invoke()
+                        }) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
                             contentDescription = null,
