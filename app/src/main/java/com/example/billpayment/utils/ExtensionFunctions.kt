@@ -46,28 +46,6 @@ fun String.padLeft(userInputLength: Int, inputText: Char): String {
     return stringBuilder.toString()
 }
 
-fun String.getSecondDigitFromRight(): Int {
-    val numberString = this
-    if (numberString.length < 2) {
-        throw IllegalArgumentException("Number should have at least 2 digits.")
-    }
-    return Character.getNumericValue(numberString[numberString.length - 2])
-}
-
-
-fun String.getCompanyCode(): Int {
-    return try {
-        if (this.length >= 6) {
-            val length = this.length
-            this.substring(length - 5, length - 2).toInt()
-        } else {
-            -1
-        }
-    } catch (ignored: Exception) {
-        -1
-    }
-}
-
 fun String.getServiceCode(): Int {
     return try {
         if (this.length >= 6) {
@@ -91,60 +69,6 @@ fun String.getAmount(): Long {
     } catch (ignored: Exception) {
         -1
     }
-}
-
-
-fun String.generateBillId(companyCode: String, serviceCode: String): String {
-    var billCode = this
-    try {
-        if (billCode.length < 8) {
-            billCode = billCode.padLeft(8, '0')
-        }
-    } catch (ignored: Exception) {
-    }
-
-    var modifiedCompanyCode = companyCode
-    try {
-        if (companyCode.length < 3) {
-            modifiedCompanyCode = companyCode.padLeft(3, '0')
-        }
-    } catch (ignored: Exception) {
-    }
-
-    var result = billCode + modifiedCompanyCode + serviceCode
-    result += result.getCheckDigit()
-
-    return result
-}
-
-fun generatePaymentId(billId: String, amount: String, year: String, periodCode: String): String {
-    var result: String
-
-    var modifiedAmount = amount.substring(0, amount.length - 3)
-    try {
-        if (modifiedAmount.length < 8) {
-            modifiedAmount = modifiedAmount.padLeft(8, '0')
-        }
-    } catch (ignored: Exception) {
-    }
-
-    val modifiedYear = year.substring(year.length - 1)
-
-    var modifiedPeriodCode = periodCode
-    try {
-        if (modifiedPeriodCode.length < 8) {
-            modifiedPeriodCode = modifiedPeriodCode.padLeft(2, '0')
-        }
-    } catch (ignored: Exception) {
-    }
-
-    result = modifiedAmount + modifiedYear + modifiedPeriodCode
-    val temp = result + result.getCheckDigit()
-
-    result = billId + temp.toLong()
-    result += result.getCheckDigit()
-
-    return result.toLong().toString()
 }
 
 fun String.getCheckDigit(): String {
