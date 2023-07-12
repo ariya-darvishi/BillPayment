@@ -51,9 +51,6 @@ class HomeViewModel @Inject constructor() :
     private fun genrateBill(billID: String?, paymentID: String?) {
         if (!billID.isNullOrEmpty() && !paymentID.isNullOrEmpty()) {
 
-//            val companyCode = billID.getCompanyCode()
-//            val serviceCode = billID.getServiceCode()
-//            val genratedBillId = billID.generateBillId(companyCode.toString(), serviceCode.toString())
             validateInput(billID, paymentID)
 
         } else {
